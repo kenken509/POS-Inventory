@@ -6,6 +6,45 @@ include_once('./includes/functions.php');
 confirmAdminLogin();
 include_once('./includes/header.php');
 
+if(isset($_GET['id'])){
+    $id = $_GET['id'];
+
+    $findQuery = $pdo->prepare("SELECT * FROM tbl_user WHERE userid = '$id'");
+    $findQuery->execute();
+    $result = $findQuery->fetch(PDO::FETCH_ASSOC);
+    $user =  $result['username'];
+    if($user == 'kenortz'){
+        echo '<script type="text/javascript">
+                jQuery(function validation(){
+                    swal("Error!", "Cannot delete '.$user.'", "error");
+                });
+                </script>';
+    }else if($findQuery->rowCount() > 0){
+        $deleteQuery = $pdo->prepare("DELETE FROM tbl_user WHERE userid = '$id'");
+        if($deleteQuery->execute()){
+            echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                        swal("Success", "Successfully deleted '.$user.'", "success");
+                    });
+                    </script>';
+        }
+    }else{
+        echo '<script type="text/javascript">
+                jQuery(function validation(){
+                    swal("ID not found!", "Something went wrong!", "error");
+                });
+                </script>';
+    }
+
+
+    
+
+    
+    
+   
+
+}
+
 if(isset($_POST['submitBtn'])){
     $userName = $_POST['nameTxt'];
     $userEmail = $_POST['emailTxt'];
@@ -72,9 +111,17 @@ if(isset($_POST['submitBtn'])){
         | Your Page Content Here |
         -------------------------->
         <div class="box box-primary">
+
             <div class="box-header with-border">
-                <h3 class="box-title">Registration Form</h3>
+                <div class="col-md-4">
+                    <h3 class="box-title">Registration Form</h3>
+                </div>
+                <div class="col-md-8">
+                    <h3 class="box-title">Existing Users</h3>
+                </div>
             </div>
+
+
             <!-- /.box-header -->
             <!-- form start -->
             <form role="form" action="" method="post">
@@ -90,23 +137,25 @@ if(isset($_POST['submitBtn'])){
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Password</label>
-                            <input type="password" class="form-control" placeholder="Password" name="passwordTxt" required>
+                            <input type="password" class="form-control" placeholder="Password" name="passwordTxt"
+                                required>
                         </div>
                         <div class="form-group">
                             <label>Account Type</label>
                             <select class="form-control" name="selectTxt" required>
-                                <option value="" disabled selected >Select Account Type</option>
+                                <option value="" disabled selected>Select Account Type</option>
                                 <option>admin</option>
                                 <option>user</option>
                             </select>
                         </div>
                         <!-- <div class="box-footer"> -->
-                            <button type="submit" class="btn btn-primary" name="submitBtn">Submit</button>
+                        <button type="submit" class="btn btn-primary" name="submitBtn">Submit</button>
                         <!-- </div> -->
 
                     </div>
 
                     <div class="col-md-8">
+
                         <table class="table table-stripped">
                             <thead>
                                 <tr>
@@ -115,6 +164,7 @@ if(isset($_POST['submitBtn'])){
                                     <th>EMAIL</th>
                                     <th>PASSWORD</th>
                                     <th>ACCOUNT TYPE</th>
+                                    <th>DELETE</th>
 
                                 </tr>
                             </thead>
@@ -131,9 +181,12 @@ if(isset($_POST['submitBtn'])){
                                                 <td>'.$row->useremail.'</td>
                                                 <td>'.$row->password.'</td>
                                                 <td>'.$row->accType.'</td>
-                                                <td></td>
+                                                <td>
+                                                    <a href="registration.php?id='.$row->userid.'" class="btn btn-danger" role="button">
+                                                        <span class="glyphicon glyphicon-trash" title="delete"></span>
+                                                    </a>
+                                                </td>
                                             </tr>
-
                                         ';
                                     }
 
@@ -143,8 +196,8 @@ if(isset($_POST['submitBtn'])){
                             </tbody>
                         </table>
                     </div>
-
-                </div>
+            </form>
+        </div>
 
 
     </section>

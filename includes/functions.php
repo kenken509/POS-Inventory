@@ -60,11 +60,27 @@ function confirmUserLogin()
         
 }
 
+
 function Redirect_to($New_Location)
 {
     
     header("Location:".$New_Location);
     exit;        
+}
+
+function sweetError($h1,$h3){
+    return  '<script type="text/javascript">
+                jQuery(function validation(){
+                    swal("'.$h1.'","'.$h3.'", "error");
+                });
+            </script>';
+}
+function sweetSuccess($h1,$h3){
+    return  '<script type="text/javascript">
+                jQuery(function validation(){
+                    swal("'.$h1.'", "'.$h3.'", "success");
+                });
+            </script>';
 }
 
 ?>
