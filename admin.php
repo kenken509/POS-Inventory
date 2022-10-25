@@ -36,14 +36,7 @@ include_once('./includes/header.php');
       <!-- /.content-wrapper -->
 
       <!-- Main Footer -->
-      <?php include_once('./includes/footer.php');?>
-
-      
-        
-            
-    
-   
-
+      <?php include_once('./includes/footer.php');?>                                 
     
   </body>
 </html>

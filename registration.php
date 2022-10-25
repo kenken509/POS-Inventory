@@ -1,9 +1,50 @@
 <?php 
+
 include_once('./includes/connectDB.php');
 include_once('./includes/sessions.php');
 include_once('./includes/functions.php');
 confirmAdminLogin();
 include_once('./includes/header.php');
+
+if(isset($_POST['submitBtn'])){
+    $userName = $_POST['nameTxt'];
+    $userEmail = $_POST['emailTxt'];
+    $userPassword = $_POST['passwordTxt'];
+    $userAccType = $_POST['selectTxt'];
+    
+    $selectQuery = $pdo->prepare("SELECT * FROM tbl_user WHERE useremail = '$userEmail'");
+    $selectQuery->execute();
+
+    if($selectQuery->rowCount() > 0){
+        echo '<script type="text/javascript">
+        jQuery(function validation(){
+          swal("Registration Failed", "email already taken!", "error");
+        });
+        </script>';
+    }else{
+        $insertQuery = $pdo->prepare("INSERT INTO tbl_user(username,useremail,password,accType)
+        VALUES(:name,:email,:pass,:Type)");
+    
+        $insertQuery->bindParam(':name',$userName);
+        $insertQuery->bindParam(':email',$userEmail);
+        $insertQuery->bindParam(':pass',$userPassword);
+        $insertQuery->bindParam(':Type',$userAccType);
+
+    
+        if($insertQuery->execute()){
+            echo '<script type="text/javascript">
+                jQuery(function validation(){
+                    swal("Good Job!", "Successfully created new account!", "success");
+                });
+                </script>';
+        }
+    }
+
+    
+    
+                       
+}
+
 ?>
 
 
@@ -36,30 +77,33 @@ include_once('./includes/header.php');
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form role="form">
+            <form role="form" action="" method="post">
                 <div class="box-body">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Name</label>
-                            <input type="text" class="form-control" id="nameReg" placeholder="Enter email" name="name">
+                            <input type="text" class="form-control" placeholder="Enter email" name="nameTxt" required>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Email address</label>
-                            <input type="email" class="form-control" id="emailReg" placeholder="Enter email"
-                                name="email">
+                            <input type="email" class="form-control" placeholder="Enter email" name="emailTxt" required>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Password</label>
-                            <input type="password" class="form-control" id="passwordReg" placeholder="Password"
-                                name="password">
+                            <input type="password" class="form-control" placeholder="Password" name="passwordTxt" required>
                         </div>
                         <div class="form-group">
                             <label>Account Type</label>
-                            <select class="form-control">
+                            <select class="form-control" name="selectTxt" required>
+                                <option value="" disabled selected >Select Account Type</option>
                                 <option>admin</option>
                                 <option>user</option>
                             </select>
                         </div>
+                        <!-- <div class="box-footer"> -->
+                            <button type="submit" class="btn btn-primary" name="submitBtn">Submit</button>
+                        <!-- </div> -->
+
                     </div>
 
                     <div class="col-md-8">
@@ -71,12 +115,12 @@ include_once('./includes/header.php');
                                     <th>EMAIL</th>
                                     <th>PASSWORD</th>
                                     <th>ACCOUNT TYPE</th>
-                                    
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php 
-                                    $select = $pdo->prepare("SELECT * from tbl_user order by userid asc");
+                                    $select = $pdo->prepare("SELECT * from tbl_user order by userid desc");
                                     $select->execute();
                                     
                                     while($row=$select->fetch(PDO::FETCH_OBJ)){
@@ -101,9 +145,7 @@ include_once('./includes/header.php');
                     </div>
 
                 </div>
-                <div class="box-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
+
 
     </section>
     <!-- /.content -->

@@ -37,7 +37,7 @@ include_once('./includes/headerUser.php');
       <?php include_once('./includes/footer.php');?>
 
       <!-- Control Sidebar -->
-      <aside class="control-sidebar control-sidebar-dark">
+      <!-- <aside class="control-sidebar control-sidebar-dark">
         <!-- Create the tabs -->
         <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
           <li class="active">
@@ -133,6 +133,6 @@ include_once('./includes/headerUser.php');
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the
-     user experience. -->
+     user experience. --> -->
   </body>
 </html>
